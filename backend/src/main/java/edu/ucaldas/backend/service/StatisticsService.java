@@ -16,15 +16,15 @@ public class StatisticsService {
     private final UsageRecordService usageRecordService;
     private final UserRepository userRepository;
 
-    public Map<String, Long> getTimeSpentPerApplication(Long userId) {
+    public Map<String, Integer> getTimeSpentPerApplication(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User not found with id: " + userId);
         }
 
         return usageRecordService.getUsageRecordsByUserId(userId).stream()
                 .collect(Collectors.groupingBy(
-                        UsageRecordDTO::getApplicationName,
-                        Collectors.summingLong(UsageRecordDTO::getDurationInMinutes)
+                        UsageRecordDTO::getFirstName,
+                        Collectors.summingInt(UsageRecordDTO::getDays)
                 ));
     }
 }

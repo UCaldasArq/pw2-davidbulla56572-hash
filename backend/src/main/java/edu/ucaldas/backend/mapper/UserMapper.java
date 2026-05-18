@@ -11,8 +11,11 @@ public class UserMapper {
         if (user == null) return null;
         return UserDTO.builder()
                 .id(user.getId())
-                .username(user.getUsername())
                 .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .document(user.getDocument())
+                .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
@@ -21,8 +24,12 @@ public class UserMapper {
         if (dto == null) return null;
         return User.builder()
                 .id(dto.getId())
-                .username(dto.getUsername())
                 .email(dto.getEmail())
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .document(dto.getDocument())
+                .phoneNumber(dto.getPhoneNumber())
+                .createdAt(dto.getCreatedAt())
                 .build();
     }
 }

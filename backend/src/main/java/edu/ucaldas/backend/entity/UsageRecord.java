@@ -1,5 +1,6 @@
 package edu.ucaldas.backend.entity;
 
+import edu.ucaldas.backend.entity.enums.UsagePeriod;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -25,17 +26,14 @@ public class UsageRecord {
     @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
-    @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private String firstName;
 
-    @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    private Integer days;
 
-    @Transient
-    public Long getDurationInMinutes() {
-        if (startTime != null && endTime != null) {
-            return java.time.Duration.between(startTime, endTime).toMinutes();
-        }
-        return 0L;
-    }
+    private Integer hours;
+
+    private Integer minutes;
+
+    @Enumerated(EnumType.STRING)
+    private UsagePeriod usagePeriod;
 }

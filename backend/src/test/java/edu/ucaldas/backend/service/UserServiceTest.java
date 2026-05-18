@@ -35,8 +35,8 @@ class UserServiceTest {
     @Test
     void getUserById_ShouldReturnUser_WhenUserExists() {
         Long userId = 1L;
-        User user = User.builder().id(userId).username("testuser").build();
-        UserDTO userDTO = UserDTO.builder().id(userId).username("testuser").build();
+        User user = User.builder().id(userId).firstName("testuser").build();
+        UserDTO userDTO = UserDTO.builder().id(userId).firstName("testuser").build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(userMapper.toDTO(user)).thenReturn(userDTO);
@@ -44,7 +44,7 @@ class UserServiceTest {
         UserDTO result = userService.getUserById(userId);
 
         assertNotNull(result);
-        assertEquals("testuser", result.getUsername());
+        assertEquals("testuser", result.getFirstName());
         verify(userRepository, times(1)).findById(userId);
     }
 

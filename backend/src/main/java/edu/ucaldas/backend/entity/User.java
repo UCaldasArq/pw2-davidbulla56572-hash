@@ -18,10 +18,16 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
+
+    private String firstName;
+
+    private String lastName;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String document;
+
+    private String phoneNumber;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

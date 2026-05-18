@@ -1,5 +1,8 @@
 package edu.ucaldas.backend.dto;
 
+import edu.ucaldas.backend.entity.enums.UsagePeriod;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -17,9 +20,12 @@ public class UsageRegistrationDTO {
     @NotNull(message = "Application ID is required")
     private Long applicationId;
 
-    @NotNull(message = "Start time is required")
-    private LocalDateTime startTime;
+    private Integer days;
 
-    @NotNull(message = "End time is required")
-    private LocalDateTime endTime;
+    private Integer hours;
+
+    private Integer minutes;
+
+    private String usagePeriod;
+
 }

@@ -1,25 +1,27 @@
 export interface User {
   id?: string;
+  email: string;
   firstName: string;
   lastName: string;
   document: string;
   phoneNumber: string;
 }
 
-export type UsagePeriod = 'Morning' | 'Afternoon' | 'Night';
+export type UsagePeriod = 'MORNING' | 'AFTERNOON' | 'NIGHT';
 
 export interface UsageRecord {
   id?: string;
   userId: string;
-  application: string;
+  applicationId: number;
   days: number;
   hours: number;
   minutes: number;
   usagePeriod: UsagePeriod;
   user?: User;
+  application?: Application;
 }
 
 export interface Application {
-  id: string;
+  id?: number;
   name: string;
 }

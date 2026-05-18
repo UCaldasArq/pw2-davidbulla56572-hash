@@ -5,6 +5,7 @@ import edu.ucaldas.backend.dto.UsageRecordDTO;
 import edu.ucaldas.backend.entity.Application;
 import edu.ucaldas.backend.entity.UsageRecord;
 import edu.ucaldas.backend.entity.User;
+import edu.ucaldas.backend.entity.enums.UsagePeriod;
 import edu.ucaldas.backend.exception.ResourceNotFoundException;
 import edu.ucaldas.backend.mapper.UsageRecordMapper;
 import edu.ucaldas.backend.repository.ApplicationRepository;
@@ -50,8 +51,10 @@ public class UsageRecordService {
         UsageRecord record = UsageRecord.builder()
                 .user(user)
                 .application(application)
-                .startTime(registrationDTO.getStartTime())
-                .endTime(registrationDTO.getEndTime())
+                .usagePeriod(UsagePeriod.valueOf(registrationDTO.getUsagePeriod()))
+                .days(registrationDTO.getDays())
+                .hours(registrationDTO.getHours())
+                .minutes(registrationDTO.getMinutes())
                 .build();
 
         UsageRecord savedRecord = usageRecordRepository.save(record);

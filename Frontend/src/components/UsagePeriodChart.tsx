@@ -1,12 +1,12 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import type { UsageRecord } from '../types';
 
 interface UsagePeriodChartProps {
   records: UsageRecord[];
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b'];
+const COLORS = ['#0f172a', '#0ea5e9', '#f59e0b'];
 
 const UsagePeriodChart: React.FC<UsagePeriodChartProps> = ({ records }) => {
   const dataMap = records.reduce((acc, curr) => {
@@ -14,32 +14,34 @@ const UsagePeriodChart: React.FC<UsagePeriodChartProps> = ({ records }) => {
     return acc;
   }, {} as Record<string, number>);
 
-  const data = Object.keys(dataMap).map(name => ({
+  const data = Object.keys(dataMap).map((name) => ({
     name,
-    value: dataMap[name]
+    value: dataMap[name],
   }));
 
   return (
-    <div className="h-64 w-full">
-      <h3 className="text-lg font-bold mb-2 text-center">Usage Frequency by Period</h3>
+    <div className="h-72 w-full">
+      <div className="mb-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-700">Ritmo</p>
+        <h3 className="mt-2 text-xl font-bold text-slate-950">Uso por momento del dia</h3>
+      </div>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
-            labelLine={false}
-            outerRadius={80}
-            fill="#8884d8"
+            outerRadius={88}
+            innerRadius={48}
             dataKey="value"
-            label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+            label={({ name, percent }) => `${name === 'Morning' ? 'Manana' : name === 'Afternoon' ? 'Tarde' : 'Noche'} ${((percent ?? 0) * 100).toFixed(0)}%`}
+            labelLine={false}
           >
             {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip />
-          <Legend />
+          <Tooltip formatter={(value, _name, item) => [value, item?.payload?.name === 'Morning' ? 'Manana' : item?.payload?.name === 'Afternoon' ? 'Tarde' : 'Noche']} />
         </PieChart>
       </ResponsiveContainer>
     </div>

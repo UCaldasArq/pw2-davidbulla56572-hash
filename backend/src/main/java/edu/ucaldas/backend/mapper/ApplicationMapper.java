@@ -12,7 +12,6 @@ public class ApplicationMapper {
         return ApplicationDTO.builder()
                 .id(application.getId())
                 .name(application.getName())
-                .category(application.getCategory())
                 .build();
     }
 
@@ -21,7 +20,6 @@ public class ApplicationMapper {
         return Application.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .category(dto.getCategory())
                 .build();
     }
 }

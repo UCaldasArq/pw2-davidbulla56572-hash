@@ -14,6 +14,4 @@ public class ApplicationDTO {
     @NotBlank(message = "Application name is required")
     private String name;
 
-    @NotBlank(message = "Category is required")
-    private String category;
 }

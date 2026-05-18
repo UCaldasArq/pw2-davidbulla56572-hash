@@ -8,31 +8,39 @@ interface UserTableProps {
 
 const UserTable: React.FC<UserTableProps> = ({ users, onDelete }) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b text-left">Name</th>
-            <th className="py-2 px-4 border-b text-left">Document</th>
-            <th className="py-2 px-4 border-b text-left">Phone</th>
-            <th className="py-2 px-4 border-b text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="hover:bg-gray-50">
-              <td className="py-2 px-4 border-b">{user.firstName} {user.lastName}</td>
-              <td className="py-2 px-4 border-b">{user.document}</td>
-              <td className="py-2 px-4 border-b">{user.phoneNumber}</td>
-              <td className="py-2 px-4 border-b">
-                <button onClick={() => user.id && onDelete(user.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">
-                  Delete
-                </button>
-              </td>
+    <div className="table-shell">
+      <div className="overflow-x-auto">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Telefono</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>
+                  <div className="font-semibold text-slate-900">{user.email}</div>
+                </td>
+                <td>
+                  <div className="font-semibold text-slate-900">{user.firstName} {user.lastName}</div>
+                </td>
+                <td>{user.document}</td>
+                <td>{user.phoneNumber}</td>
+                <td>
+                  <button onClick={() => user.id && onDelete(user.id)} className="btn-danger">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

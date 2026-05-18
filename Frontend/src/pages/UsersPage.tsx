@@ -16,7 +16,7 @@ const UsersPage: React.FC = () => {
       setUsers(response.data);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch users. Is the backend running?');
+      setError('No fue posible cargar los usuarios. ¿El backend esta activo?');
       console.error(err);
     } finally {
       setLoading(false);
@@ -33,43 +33,70 @@ const UsersPage: React.FC = () => {
       fetchUsers();
     } catch (err: any) {
       if (err.response && err.response.status === 400) {
-        alert('Validation error: ' + (err.response.data.message || 'Check fields'));
+        alert('Error de validacion: ' + (err.response.data.message || 'Revisa los campos'));
       } else {
-        alert('Error creating user');
+        alert('Error al crear el usuario');
       }
     }
   };
 
   const handleDeleteUser = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm('¿Seguro que deseas eliminar este usuario?')) {
       try {
         await deleteUser(id);
         fetchUsers();
       } catch (err) {
-        alert('Error deleting user');
+        alert('Error al eliminar el usuario');
       }
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">User Management</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-1">
-          <h2 className="text-xl font-semibold mb-4">Register User</h2>
+    <div className="space-y-8">
+      <section className="panel-dark px-6 py-8 sm:px-8">
+        <p className="eyebrow">Gestion de directorio</p>
+        <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-4xl font-bold">Gestion de usuarios</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-800 sm:text-base">
+              Registra personas, cuida la calidad de sus datos y mantén ordenada la base del sistema.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[22px] border border-white/12 bg-white/10 px-5 py-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-gray-700">Usuarios cargados</p>
+              <p className="mt-2 text-3xl font-bold">{loading ? '...' : users.length}</p>
+            </div>
+            <div className="rounded-[22px] border border-white/12 bg-white/10 px-5 py-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-gray-700">Estado</p>
+              <p className="mt-2 text-sm font-semibold">{error ? 'Con incidencia' : 'Listo para gestionar'}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <div className="mb-4 px-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Crear</p>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">Registrar usuario</h2>
+          </div>
           <UserForm onSubmit={handleCreateUser} />
         </div>
-        <div className="md:col-span-2">
-          <h2 className="text-xl font-semibold mb-4">Registered Users</h2>
+        <div>
+          <div className="mb-4 px-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Listado</p>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">Usuarios registrados</h2>
+          </div>
           {loading ? (
-            <p>Loading users...</p>
+            <div className="panel p-8 text-sm text-slate-500">Cargando usuarios...</div>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <div className="panel border border-rose-200 p-8 text-sm text-rose-600">{error}</div>
           ) : (
             <UserTable users={users} onDelete={handleDeleteUser} />
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

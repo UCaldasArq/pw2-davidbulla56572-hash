@@ -11,13 +11,13 @@ public class UsageRecordMapper {
         if (record == null) return null;
         return UsageRecordDTO.builder()
                 .id(record.getId())
-                .userId(record.getUser().getId())
-                .username(record.getUser().getUsername())
-                .applicationId(record.getApplication().getId())
-                .applicationName(record.getApplication().getName())
-                .startTime(record.getStartTime())
-                .endTime(record.getEndTime())
-                .durationInMinutes(record.getDurationInMinutes())
+                .user(record.getUser())
+                .firstName(record.getUser().getFirstName())
+                .usagePeriod(record.getUsagePeriod())
+                .days(record.getDays())
+                .hours(record.getHours())
+                .minutes(record.getMinutes())
+                .application(record.getApplication())
                 .build();
     }
 }

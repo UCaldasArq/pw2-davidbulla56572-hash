@@ -7,6 +7,7 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<User>({
+    email: '',
     firstName: '',
     lastName: '',
     document: '',
@@ -20,39 +21,43 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.firstName && formData.lastName && formData.document && formData.phoneNumber) {
+    if (formData.email && formData.firstName && formData.lastName && formData.document && formData.phoneNumber) {
       if (!/^\d+$/.test(formData.phoneNumber)) {
-        alert('Phone number must contain only numbers');
+        alert('El numero de telefono solo debe contener numeros');
         return;
       }
       onSubmit(formData);
-      setFormData({ firstName: '', lastName: '', document: '', phoneNumber: '' });
+      setFormData({ email: '', firstName: '', lastName: '', document: '', phoneNumber: '' });
     } else {
-      alert('All fields are mandatory');
+      alert('Todos los campos son obligatorios');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" noValidate>
-      <div className="mb-4">
-        <label htmlFor="firstName" className="block text-gray-700 text-sm font-bold mb-2">First Name</label>
-        <input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" required />
+    <form onSubmit={handleSubmit} className="panel p-6" noValidate>
+      <div className="mb-5">
+        <label htmlFor="email" className="field-label">Email</label>
+        <input id="email" name="email" value={formData.email} onChange={handleChange} className="field-input" type="email" required />
       </div>
-      <div className="mb-4">
-        <label htmlFor="lastName" className="block text-gray-700 text-sm font-bold mb-2">Last Name</label>
-        <input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" required />
+      <div className="mb-5">
+        <label htmlFor="firstName" className="field-label">Nombre</label>
+        <input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} className="field-input" type="text" required />
       </div>
-      <div className="mb-4">
-        <label htmlFor="document" className="block text-gray-700 text-sm font-bold mb-2">Document</label>
-        <input id="document" name="document" value={formData.document} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" required />
+      <div className="mb-5">
+        <label htmlFor="lastName" className="field-label">Apellido</label>
+        <input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} className="field-input" type="text" required />
+      </div>
+      <div className="mb-5">
+        <label htmlFor="document" className="field-label">Documento</label>
+        <input id="document" name="document" value={formData.document} onChange={handleChange} className="field-input" type="text" required />
       </div>
       <div className="mb-6">
-        <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
-        <input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" required pattern="[0-9]+" />
+        <label htmlFor="phoneNumber" className="field-label">Telefono</label>
+        <input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="field-input" type="text" required pattern="[0-9]+" />
       </div>
       <div className="flex items-center justify-between">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-          Register User
+        <button className="btn-primary w-full sm:w-auto" type="submit">
+          Registrar usuario
         </button>
       </div>
     </form>

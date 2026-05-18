@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ApplicationChart from '../components/ApplicationChart';
 import UsagePeriodChart from '../components/UsagePeriodChart';
 import type { UsageRecord } from '../types';
@@ -14,7 +14,7 @@ const DashboardPage: React.FC = () => {
         const response = await getUsageRecords();
         setRecords(response.data);
       } catch (err) {
-        console.error('Failed to fetch usage records', err);
+        console.error('No fue posible cargar los registros de uso', err);
       } finally {
         setLoading(false);
       }
@@ -22,11 +22,16 @@ const DashboardPage: React.FC = () => {
     fetchRecords();
   }, []);
 
-  const getTopApplication = () => {
-    if (records.length === 0) return null;
+  const totals = useMemo(() => {
+    const totalMinutes = records.reduce(
+      (sum, current) => sum + (current.days * 24 * 60) + (current.hours * 60) + current.minutes,
+      0,
+    );
+
     const dataMap = records.reduce((acc, curr) => {
-      const totalMinutes = (curr.days * 24 * 60) + (curr.hours * 60) + curr.minutes;
-      acc[curr.application] = (acc[curr.application] || 0) + totalMinutes;
+      const usageMinutes = (curr.days * 24 * 60) + (curr.hours * 60) + curr.minutes;
+      const appName = curr.application?.name ?? 'Unknown';
+      acc[appName] = (acc[appName] || 0) + usageMinutes;
       return acc;
     }, {} as Record<string, number>);
 
@@ -40,42 +45,63 @@ const DashboardPage: React.FC = () => {
       }
     }
 
-    return { name: topApp, time: maxTime };
-  };
+    return {
+      totalMinutes,
+      topApp,
+      topAppHours: maxTime > -1 ? (maxTime / 60).toFixed(1) : '0.0',
+      applicationCount: Object.keys(dataMap).length,
+    };
+  }, [records]);
 
-  const topApp = getTopApplication();
-
-  if (loading) return <div className="p-8 text-center">Loading dashboard...</div>;
+  if (loading) {
+    return <div className="panel p-8 text-center text-slate-500">Cargando dashboard...</div>;
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Usage Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
-          <h3 className="text-gray-500 text-sm font-medium uppercase">Total Records</h3>
-          <p className="text-3xl font-bold">{records.length}</p>
+    <div className="space-y-8">
+      <section className="panel-dark px-6 py-8 sm:px-8">
+        <p className="eyebrow">Analitica visual</p>
+        <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-4xl font-bold ">Dashboard de uso</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-700 sm:text-base">
+              Lee el conjunto de datos de un vistazo, entiende la concentracion por aplicacion y detecta los periodos de mayor actividad.
+            </p>
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
-          <h3 className="text-gray-500 text-sm font-medium uppercase">Most Used App</h3>
-          <p className="text-3xl font-bold">{topApp ? topApp.name : 'N/A'}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
-          <h3 className="text-gray-500 text-sm font-medium uppercase">Total Time (Hours)</h3>
-          <p className="text-3xl font-bold">
-            {topApp ? (topApp.time / 60).toFixed(1) : 0}
-          </p>
-        </div>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-lg shadow-md">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article className="stat-card">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Total de registros</p>
+          <p className="mt-3 text-4xl font-bold text-slate-950">{records.length}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-500">Eventos de uso capturados.</p>
+        </article>
+        <article className="stat-card">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Aplicacion mas usada</p>
+          <p className="mt-3 text-4xl font-bold text-slate-950">{totals.topApp || 'N/D'}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-500">La aplicacion con mayor carga horaria acumulada.</p>
+        </article>
+        <article className="stat-card">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Horas registradas</p>
+          <p className="mt-3 text-4xl font-bold text-slate-950">{(totals.totalMinutes / 60).toFixed(1)}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-500">Tiempo total representado en el sistema.</p>
+        </article>
+        <article className="stat-card">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Aplicaciones activas</p>
+          <p className="mt-3 text-4xl font-bold text-slate-950">{totals.applicationCount}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-500">Aplicaciones distintas con uso registrado.</p>
+        </article>
+      </section>
+
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div className="panel p-6">
           <ApplicationChart records={records} />
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="panel p-6">
           <UsagePeriodChart records={records} />
         </div>
-      </div>
+      </section>
     </div>
   );
 };

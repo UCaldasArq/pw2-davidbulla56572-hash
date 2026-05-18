@@ -41,8 +41,7 @@ public class ApplicationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found with id: " + id));
         
         existingApplication.setName(applicationDTO.getName());
-        existingApplication.setCategory(applicationDTO.getCategory());
-        
+
         Application updatedApplication = applicationRepository.save(existingApplication);
         return applicationMapper.toDTO(updatedApplication);
     }
